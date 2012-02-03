@@ -2,9 +2,6 @@ module Database.Siege.DBMap where
 
 import Control.Monad.Trans.Store
 
-import qualified Data.Enumerator as E
-import qualified Data.Enumerator.List as EL
-
 import Control.Monad.Error
 import Control.Monad.Trans.Maybe
 
@@ -55,9 +52,11 @@ delete ref key = runMaybeT $ do
   ref''' <- MaybeT $ T.delete (Just ref'') key
   lift $ N.createLabel ident ref'''
 
+{-
 iterate :: Monad m => Maybe r -> E.Enumerator (B.ByteString, r) (RawDBOperation r m) a
 iterate Nothing i = do
   E.returnI i
 iterate (Just ref) i = do
   ref' <- lift $ N.unlabel ident ref
   (T.iterate (Just ref') E.$= (EL.mapM N.getLabel)) i
+-}

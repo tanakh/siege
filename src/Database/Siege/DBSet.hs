@@ -2,9 +2,6 @@ module Database.Siege.DBSet where
 
 import Control.Monad.Trans.Store
 
-import qualified Data.Enumerator as E
-import qualified Data.Enumerator.List as EL
-
 import Data.Maybe
 import qualified Data.ByteString as B
 
@@ -57,8 +54,10 @@ exists (Just ref) item = do
         _ ->
           throwError TypeError
 
+{-
 iterate :: Monad m => Maybe r -> E.Enumerator B.ByteString (RawDBOperation r m) a
 iterate Nothing i = E.returnI i
 iterate (Just ref) i = do
   ref' <- lift $ unlabel ident ref
   (T.iterate (Just ref') E.$= (EL.mapM N.getValue)) i
+-}

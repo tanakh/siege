@@ -7,13 +7,11 @@ import Prelude hiding (null)
 import Data.Nullable
 
 import qualified Data.ByteString as B
+import qualified Data.Conduit as C
 
 import Control.Monad
 import Control.Monad.Hoist
 import Control.Monad.Error
-
-import qualified Data.Enumerator as E
-import Data.Enumerator.Hoist
 
 import qualified Database.Siege.DBMap as Map
 import qualified Database.Siege.DBSet as Set
@@ -38,12 +36,12 @@ data DBOperation r a =
   MapLookup (Maybe r) B.ByteString (Maybe r -> DBOperation r a) |
   MapInsert (Maybe r) B.ByteString (Maybe r) (Maybe r -> DBOperation r a) |
   MapDelete (Maybe r) B.ByteString (Maybe r -> DBOperation r a) |
-  forall x. MapItems (Maybe r) (E.Iteratee (B.ByteString, r) (DBOperation r) x) (x -> DBOperation r a) |
+  forall x. MapItems (Maybe r) (C.Sink (B.ByteString, r) (DBOperation r) x) (x -> DBOperation r a) |
 
   SetHas (Maybe r) B.ByteString (Bool -> DBOperation r a) |
   SetInsert (Maybe r) B.ByteString (Maybe r -> DBOperation r a) |
   SetDelete (Maybe r) B.ByteString (Maybe r -> DBOperation r a) |
-  forall x. SetItems (Maybe r) (E.Iteratee B.ByteString (DBOperation r) x) (x -> DBOperation r a)
+  forall x. SetItems (Maybe r) (C.Sink B.ByteString (DBOperation r) x) (x -> DBOperation r a)
 
 getType = flip GetType return
 
@@ -131,9 +129,9 @@ convert (MapInsert r k v c) = do
 convert (MapDelete r k c) = do
   o <- Map.delete r k
   convert $ c o
-convert (MapItems r i c) = do
-  o <- E.run_ ((Map.iterate r) E.$$ (hoist convert i))
-  convert $ c o
+convert (MapItems r i c) = undefined -- do
+  -- o <- E.run_ ((Map.iterate r) E.$$ (hoist convert i))
+  -- convert $ c o
 
 convert (SetHas r k c) = do
   o <- Set.exists r k
@@ -144,6 +142,6 @@ convert (SetInsert r k c) = do
 convert (SetDelete r k c) = do
   o <- Set.delete r k
   convert $ c o
-convert (SetItems r i c) = do
-  o <- E.run_ ((Set.iterate r) E.$$ (hoist convert i))
-  convert $ c o
+convert (SetItems r i c) = undefined -- do
+  -- o <- E.run_ ((Set.iterate r) E.$$ (hoist convert i))
+  -- convert $ c o

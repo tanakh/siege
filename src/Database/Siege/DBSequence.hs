@@ -1,6 +1,5 @@
 module Database.Siege.DBSequence where
 
-import qualified Data.Enumerator as E
 import Data.Word
 import Database.Siege.DBNode
 
@@ -33,8 +32,8 @@ delete = undefined
 lookup :: r -> Word64 -> RawDBOperation r m r
 lookup = undefined
 
-iterate :: r -> E.Enumerator (Word64, r) (RawDBOperation r m) a
-iterate = undefined
+-- iterate :: r -> E.Enumerator (Word64, r) (RawDBOperation r m) a
+-- iterate = undefined
 
 length :: r -> RawDBOperation r m Word64
 length = undefined

@@ -28,7 +28,7 @@ Library
                     , mtl          == 2.0.*
                     , transformers == 0.2.*
                     , SHA          == 1.5.*
-                    , enumerator   >= 0.4.14 && < 0.5
+                    , conduit      == 0.2.*
                     , containers   == 0.4.*
                     , network      == 2.3.*
                     , random       == 1.0.*
@@ -36,7 +36,7 @@ Library
   exposed-modules:    Control.Monad.Hoist
                       Control.Monad.Trans.Store
 
-                      Data.Enumerator.Hoist
+                      -- Data.Enumerator.Hoist
                       Data.Nullable
 
                       Database.Siege.Commands
@@ -47,7 +47,7 @@ Library
                       Database.Siege.DBNodeBinary
                       Database.Siege.DBNode
                       Database.Siege.DBOperation
-                      Database.Siege.DBSequence
+                      -- Database.Siege.DBSequence
                       Database.Siege.DBSet
                       Database.Siege.DBTree
                       -- Database.Siege.DBVector

@@ -37,15 +37,16 @@ import Debug.Trace.Monad
 type NetworkOp r = ConnectionT (SharedStateT (Maybe r) (StoreT r (Node r) Identity))
 
 convert :: NetworkOp r () -> Socket -> FVar (Maybe r) -> (forall a. StoreT r (Node r) IO a -> IO a) -> IO ()
-convert op sock var fn =
+convert op sock var fn = undefined {-
   let stage1 = withSocket sock . hoist stage2
       stage2 = withFVar var . hoist stage3
       stage3 = fn . hoist stage4
       stage4 = return . runIdentity in
         stage1 op
+-}
 
 recvCommand :: NetworkOp r [Maybe B.ByteString]
-recvCommand = do
+recvCommand = undefined {- do
   v <- C.recvI R.recvCommand
   case v of
     Nothing -> do
@@ -53,22 +54,25 @@ recvCommand = do
       C.close
     Just v' ->
       return v'
+-}
 
 performAlter :: (Maybe r -> DBOperation r (a, Maybe r)) -> NetworkOp r (Either DBError a)
-performAlter op =
+performAlter op = undefined {-
   lift $ alter $ (\head -> do
     v <- runErrorT $ DBOp.convert $ op head
     case v of
       Right (a, r) -> return (r, Right a)
       Left e -> return (head, Left e))
+-}
 
 performRead :: (Maybe r -> DBOperation r a) -> NetworkOp r (Either DBError a)
-performRead op = do
+performRead op = undefined {- do
   head <- lift Sh.get
   lift $ lift $ runErrorT $ DBOp.convert $ op head
+-}
 
 constructList :: Monad m => m (Either (Maybe a) b) -> m (Either [a] b)
-constructList act = do
+constructList act = undefined {- do
   v <- act
   case v of
     Right v' -> return $ Right v'
@@ -78,9 +82,10 @@ constructList act = do
       case rest of
         Right v' -> return $ Right v'
         Left arr -> return $ Left $ v':arr
+-}
 
 protocol :: NetworkOp r ()
-protocol = flip (>>) (return ()) $ flip runStateT Map.empty $ forever $ do
+protocol = undefined {- flip (>>) (return ()) $ flip runStateT Map.empty $ forever $ do
   c <- lift $ recvCommand
   c' <- case sequence c of
     Just c' -> return c'
@@ -175,3 +180,4 @@ protocol = flip (>>) (return ()) $ flip runStateT Map.empty $ forever $ do
             Left _ -> sendReply $ ErrorReply "unhandled error"
         Nothing -> do
           lift $ sendReply $ ErrorReply "unknown command"
+-}

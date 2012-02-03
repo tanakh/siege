@@ -7,7 +7,6 @@ import Data.Nullable
 
 import qualified Data.ByteString as B
 import Control.Monad.State
-import qualified Data.Enumerator as E
 
 import Database.Siege.Connection
 import Database.Siege.DBOperation
@@ -39,6 +38,8 @@ globMatch (p:ps) (m:ms) =
     False
 
 readCommand :: String -> [B.ByteString] -> Maybe (Maybe r -> DBOperation r Reply)
+readCommand = undefined
+{-
 readCommand "type" [key] = Just (\head -> do
   ref <- mapLookup head key
   ty <- getType ref
@@ -134,8 +135,11 @@ readCommand "scard" [key] = Just (\head -> do
                 op)
   return $ IntegerReply n)
 readCommand _ _ = Nothing
+-}
 
 writeCommand :: String -> [B.ByteString] -> Maybe (Maybe r -> DBOperation r (Reply, Maybe r))
+writeCommand = undefined
+{-
 writeCommand "set" [key, val] = Just (\head -> do
   val' <- createValue val
   head' <- mapInsert head key val'
@@ -171,6 +175,7 @@ writeCommand "srem" [key, field] = Just (\head -> do
   head' <- mapInsert head key ref'
   return (StatusReply "OK", head'))
 writeCommand _ _ = Nothing
+-}
 
 command c0 c1 =
   case (readCommand c0 c1, writeCommand c0 c1) of
@@ -185,6 +190,8 @@ commandToState (Left c) = do
   lift $ c head
 
 sendReply :: Monad m => Reply -> ConnectionT m ()
+sendReply = undefined
+{-
 sendReply (ErrorReply e) = send $ B.concat $ map stToB ["-", e, "\r\n"]
 sendReply (StatusReply s) = send $ B.concat $ map stToB ["+", s, "\r\n"]
 sendReply (IntegerReply n) = send $ B.concat $ map stToB [":", show n, "\r\n"]
@@ -194,3 +201,4 @@ sendReply (MultiReply (Nothing)) = send $ stToB "*-1\r\n"
 sendReply (MultiReply (Just s)) = do
   send $ B.concat $ map stToB ["*", show $ length s, "\r\n"]
   mapM_ sendReply s
+-}

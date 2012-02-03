@@ -1,5 +1,4 @@
 {-# LANGUAGE ScopedTypeVariables #-}
-{-# OPTIONS_GHC -Wwarn #-} -- FIXME
 
 module Database.Siege.DBTree where
 
@@ -9,7 +8,7 @@ import Data.Nullable
 import Data.Word
 import qualified Data.ByteString as B
 import Data.List hiding (null, lookup, delete, insert)
-import qualified Data.Enumerator as E
+import qualified Data.Conduit as C
 
 import Control.Monad
 import Control.Monad.Error
@@ -132,6 +131,7 @@ delete ref h =
       else
         liftM Just $ lift $ store $ Branch options
 
+{-
 iterate :: Monad m => Maybe r -> E.Enumerator r (RawDBOperation r m) a
 iterate ref s =
   case ref of
@@ -154,6 +154,7 @@ iterate ref s =
             _ -> E.returnI s
         _ ->
           lift $ throwError TypeError
+-}
 
 --type Endo v = v -> v
 --type MergeFn m v = v -> v -> v -> m (Maybe v)

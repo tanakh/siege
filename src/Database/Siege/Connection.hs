@@ -2,9 +2,10 @@
 
 module Database.Siege.Connection where
 
+data ConnectionT m a = ConnectionT (m a)
+
+{-
 import qualified Data.ByteString as B
-import qualified Data.Enumerator as E
-import Data.Enumerator.Hoist ()
 import Control.Monad
 import Control.Monad.Hoist
 import Control.Monad.Trans
@@ -86,3 +87,4 @@ withSocket sock op =
       E.Yield _ E.EOF ->
         undefined -- TODO: fixme properly
       E.Error err -> (error . show) err -- TODO: fixme properly
+-}
